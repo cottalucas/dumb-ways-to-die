@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { CheckCircle, Circle, Clock, Dumbbell } from 'lucide-react'
+import { CheckCircle, Circle, Clock, Dumbbell, ArrowRight } from 'lucide-react'
 import { Button } from '../components/ui/Button'
 import { ExerciseBottomSheet } from '../components/home/ExerciseBottomSheet'
 import { useLang } from '../context/LanguageContext'
@@ -8,12 +8,11 @@ import { useUser } from '../context/UserContext'
 import { todaySession, OtagoExercise, ExerciseCategory } from '../data/otago'
 
 // ─── AI companion ─────────────────────────────────────────────────────────────
-// Swap this function body for a real API call when ready.
 function getAIGreeting(lang: 'de' | 'en'): string {
   if (lang === 'en') {
-    return 'Last time you held the tandem stand for 11 seconds. Today let\'s beat that.'
+    return 'Last time you held the tandem stand for 11 seconds. Today let\'s beat that. Any questions before you start?'
   }
-  return 'Beim letzten Mal haben Sie beim Tandem-Stand 11 Sekunden gehalten. Heute versuchen wir, das zu toppen.'
+  return 'Beim letzten Mal haben Sie den Tandem-Stand 11 Sekunden gehalten. Heute versuchen wir, das zu toppen. Haben Sie Fragen vor dem Start?'
 }
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -32,6 +31,7 @@ const categoryColor: Record<ExerciseCategory, string> = {
 // ─── Sub-components ───────────────────────────────────────────────────────────
 function AICard() {
   const { t, lang } = useLang()
+  const navigate = useNavigate()
   return (
     <div className="rounded-card bg-warm-dark p-5 mb-4">
       <div className="flex items-center gap-2 mb-3">
@@ -40,9 +40,16 @@ function AICard() {
           {t.home.aiLabel}
         </span>
       </div>
-      <p className="text-base leading-relaxed text-warm-off-white">
+      <p className="text-base leading-relaxed text-warm-off-white mb-4">
         {getAIGreeting(lang)}
       </p>
+      <button
+        onClick={() => navigate('/chat')}
+        className="flex items-center gap-2 text-sm font-semibold text-warm-accent hover:text-warm-off-white transition-colors"
+      >
+        <ArrowRight size={15} />
+        {lang === 'en' ? 'Open chat' : 'Chat öffnen'}
+      </button>
     </div>
   )
 }
@@ -114,9 +121,13 @@ export function Home() {
   const salutation = useGreeting()
 
   const [selectedExercise, setSelectedExercise] = useState<OtagoExercise | null>(null)
-  const [doneIds, setDoneIds] = useState<Set<string>>(
-    new Set(todaySession.exercises.filter(e => e.done).map(e => e.id))
-  )
+  const [doneIds, setDoneIds] = useState<Set<string>>(() => {
+    const base = todaySession.exercises.filter(e => e.done).map(e => e.id)
+    const today = new Date().toISOString().slice(0, 10)
+    const stored = localStorage.getItem(`completedToday_${today}`)
+    const fromSession: string[] = stored ? JSON.parse(stored) : []
+    return new Set([...base, ...fromSession])
+  })
 
   const handleComplete = (id: string) => {
     setDoneIds(prev => new Set([...prev, id]))

@@ -20,7 +20,6 @@ type Phase =
 interface SessionState {
   exerciseIndex: number
   currentSet: number
-  skipIntros: boolean
   phase: Phase
 }
 
@@ -111,13 +110,11 @@ interface IntroProps {
   exercise: OtagoExercise
   exerciseIndex: number
   total: number
-  skipIntros: boolean
-  onToggleSkip: () => void
   onStart: () => void
   onExit: () => void
 }
 
-function ExerciseIntro({ exercise, exerciseIndex, total, skipIntros, onToggleSkip, onStart, onExit }: IntroProps) {
+function ExerciseIntro({ exercise, exerciseIndex, total, onStart, onExit }: IntroProps) {
   const { t, lang } = useLang()
   const name = lang === 'en' ? exercise.name_en : exercise.name
   const description = lang === 'en' ? exercise.description_en : exercise.description
@@ -166,19 +163,10 @@ function ExerciseIntro({ exercise, exerciseIndex, total, skipIntros, onToggleSki
         <p className="text-base text-warm-muted leading-relaxed">{description}</p>
       </div>
 
-      <div className="px-5 pb-8 pt-4 flex-shrink-0 flex flex-col gap-3">
+      <div className="px-5 pb-8 pt-4 flex-shrink-0">
         <Button variant="primary" fullWidth onClick={onStart}>
           {t.session.startExercise}
         </Button>
-        <button
-          onClick={onToggleSkip}
-          className="flex items-center justify-center gap-2 text-sm text-warm-muted py-2"
-        >
-          <div className={`w-5 h-5 rounded border-2 flex items-center justify-center transition-colors ${skipIntros ? 'bg-warm-text border-warm-text' : 'border-warm-border'}`}>
-            {skipIntros && <span className="text-warm-off-white text-xs font-bold">✓</span>}
-          </div>
-          {t.session.skipIntro}
-        </button>
       </div>
     </div>
   )
@@ -425,7 +413,6 @@ export function SessionFlow() {
     phase: 'clinical',
     exerciseIndex: 0,
     currentSet: 1,
-    skipIntros: false,
   })
 
   const ex = exercises[state.exerciseIndex]
@@ -451,7 +438,10 @@ export function SessionFlow() {
       // This exercise fully done
       const nextIndex = state.exerciseIndex + 1
       if (nextIndex >= total) {
-        // All done
+        // All done — persist completed IDs so Home reflects them
+        const today = new Date().toISOString().slice(0, 10)
+        const ids = exercises.map(e => e.id)
+        localStorage.setItem(`completedToday_${today}`, JSON.stringify(ids))
         logSession(userId, {
           sessionTemplateId: 'balance-kraft-4',
           sessionName: todaySession.title.de,
@@ -461,24 +451,14 @@ export function SessionFlow() {
         }).catch(() => {})
         advance({ phase: 'complete' })
       } else {
-        // Next exercise
-        if (state.skipIntros) {
-          advance({ phase: 'active', exerciseIndex: nextIndex, currentSet: 1 })
-        } else {
-          advance({ phase: 'intro', exerciseIndex: nextIndex, currentSet: 1 })
-        }
+        advance({ phase: 'intro', exerciseIndex: nextIndex, currentSet: 1 })
       }
     }
   }
 
-  // Rest done → next set, skip intro if checkbox set
+  // Rest done → next set
   const handleRestDone = () => {
-    const nextSet = state.currentSet + 1
-    if (state.skipIntros) {
-      advance({ phase: 'active', currentSet: nextSet })
-    } else {
-      advance({ phase: 'intro', currentSet: nextSet })
-    }
+    advance({ phase: 'intro', currentSet: state.currentSet + 1 })
   }
 
   if (state.phase === 'clinical') return <ClinicalCheck onDone={handleClinicalDone} />
@@ -493,8 +473,6 @@ export function SessionFlow() {
         exercise={ex}
         exerciseIndex={state.exerciseIndex}
         total={total}
-        skipIntros={state.skipIntros}
-        onToggleSkip={() => advance({ skipIntros: !state.skipIntros })}
         onStart={handleStartExercise}
         onExit={() => navigate('/home')}
       />
