@@ -27,9 +27,10 @@ export function AppShell({ children, showTabBar }: AppShellProps) {
             </div>
           </div>
         ) : (
-          // Full-height layout: flex column so screens can use flex-1 to fill the frame.
-          <div className="flex-1 flex flex-col overflow-hidden">
-            <div className="animate-fade-slide-in flex-1 flex flex-col">
+          // Full-height layout: min-h-0 is required so nested flex-1 children can
+          // bound their height and overflow-y-auto actually scrolls.
+          <div className="flex-1 flex flex-col overflow-hidden min-h-0">
+            <div className="animate-fade-slide-in flex-1 flex flex-col min-h-0 overflow-hidden">
               {children}
             </div>
           </div>

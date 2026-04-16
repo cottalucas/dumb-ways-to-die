@@ -64,15 +64,15 @@ export function Chat() {
   }
 
   return (
-    <div className="flex-1 flex flex-col bg-surface">
+    <div className="flex-1 flex flex-col bg-surface min-h-0 overflow-hidden">
       {/* Header */}
       <div className="flex items-center h-16 px-4 border-b border-warm-border bg-white gap-3 flex-shrink-0">
         <button
           onClick={() => navigate('/home')}
-          className="w-12 h-12 flex items-center justify-center rounded-full hover:bg-warm-bg"
+          className="w-12 h-12 flex items-center justify-center rounded-full hover:bg-warm-bg active:bg-warm-accent-light"
           aria-label="Back"
         >
-          <ArrowLeft size={22} />
+          <ArrowLeft size={22} className="text-warm-text" />
         </button>
         <h1 className="flex-1 text-base font-semibold text-warm-text">{t.chat.title}</h1>
         <div className="w-9 h-9 rounded-full bg-teal flex items-center justify-center">
@@ -83,7 +83,7 @@ export function Chat() {
       {error && <p className="text-xs text-accent-red text-center py-1 bg-red-50">{error}</p>}
 
       {/* Messages */}
-      <div className="flex-1 overflow-y-auto px-4 py-5">
+      <div className="flex-1 overflow-y-auto min-h-0 px-4 py-5">
         {messages.map(msg => (
           <ChatBubble key={msg.id ?? msg.timestamp.toISOString()} sender={msg.sender} text={msg.text} />
         ))}
