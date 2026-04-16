@@ -1,0 +1,162 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    font-size: 16px;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    @apply bg-surface text-text-primary font-sans;
+    margin: 0;
+    min-height: 100dvh;
+  }
+
+  * {
+    -webkit-tap-highlight-color: transparent;
+    box-sizing: border-box;
+  }
+
+  button {
+    font-family: inherit;
+    cursor: pointer;
+  }
+}
+
+@layer utilities {
+  .safe-bottom {
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+}
+
+@keyframes fadeSlideIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes scaleIn {
+  from { transform: scale(0.8); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+@keyframes checkDraw {
+  from { stroke-dashoffset: 100; }
+  to { stroke-dashoffset: 0; }
+}
+
+@keyframes pulse-ring {
+  0% { transform: scale(1); opacity: 0.7; }
+  50% { transform: scale(1.1); opacity: 0.4; }
+  100% { transform: scale(1); opacity: 0.7; }
+}
+
+@keyframes pulse-ring2 {
+  0% { transform: scale(1); opacity: 0.5; }
+  50% { transform: scale(1.2); opacity: 0.2; }
+  100% { transform: scale(1); opacity: 0.5; }
+}
+
+@keyframes bounce-dots {
+  0%, 60%, 100% { transform: translateY(0); }
+  30% { transform: translateY(-6px); }
+}
+
+@keyframes streak-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(26, 138, 125, 0.4); }
+  50% { box-shadow: 0 0 0 6px rgba(26, 138, 125, 0); }
+}
+
+@keyframes walkFigure {
+  0% { transform: translateX(0px) rotate(0deg); }
+  25% { transform: translateX(4px) rotate(5deg); }
+  50% { transform: translateX(8px) rotate(0deg); }
+  75% { transform: translateX(4px) rotate(-5deg); }
+  100% { transform: translateX(0px) rotate(0deg); }
+}
+
+@keyframes standBalance {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(3deg); }
+  75% { transform: rotate(-3deg); }
+}
+
+@keyframes slideDown {
+  from { transform: translateY(-20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes sideStep {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(10px); }
+}
+
+.animate-fade-slide-in {
+  animation: fadeSlideIn 0.3s ease-out both;
+}
+
+.animate-scale-in {
+  animation: scaleIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+.animate-pulse-ring {
+  animation: pulse-ring 2s ease-in-out infinite;
+}
+
+.animate-pulse-ring2 {
+  animation: pulse-ring2 2s ease-in-out infinite 0.5s;
+}
+
+.animate-bounce-dot-1 {
+  animation: bounce-dots 1.2s ease-in-out infinite;
+}
+
+.animate-bounce-dot-2 {
+  animation: bounce-dots 1.2s ease-in-out infinite 0.15s;
+}
+
+.animate-bounce-dot-3 {
+  animation: bounce-dots 1.2s ease-in-out infinite 0.3s;
+}
+
+.animate-streak-pulse {
+  animation: streak-pulse 2s ease-in-out infinite;
+}
+
+.animate-walk {
+  animation: walkFigure 1.2s ease-in-out infinite;
+}
+
+.animate-stand-balance {
+  animation: standBalance 2s ease-in-out infinite;
+}
+
+.animate-side-step {
+  animation: sideStep 1.5s ease-in-out infinite;
+}
+
+.animate-slide-down {
+  animation: slideDown 0.2s ease-out both;
+}
+
+.check-path {
+  stroke-dasharray: 100;
+  stroke-dashoffset: 100;
+  animation: checkDraw 0.6s ease-out 0.3s forwards;
+}
+
+.stagger-children > *:nth-child(1) { animation-delay: 0ms; }
+.stagger-children > *:nth-child(2) { animation-delay: 50ms; }
+.stagger-children > *:nth-child(3) { animation-delay: 100ms; }
+.stagger-children > *:nth-child(4) { animation-delay: 150ms; }
+.stagger-children > *:nth-child(5) { animation-delay: 200ms; }
+.stagger-children > *:nth-child(6) { animation-delay: 250ms; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

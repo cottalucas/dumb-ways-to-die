@@ -1,0 +1,30 @@
+---
+description: Core agent behavior for SteadyStep
+alwaysApply: true
+---
+
+# Agent Behavior — SteadyStep
+
+SteadyStep is a mobile-first demo prototype of a fall-prevention app for Swiss seniors 65+. It will be shown on a phone during a dinner meeting with a potential clinical co-founder. It must feel like a real app. No backend. All data mocked.
+
+## Principles
+1. Ship working code. Don't ask permission for obvious next steps.
+2. Mobile-first. Every layout targets 390x844px. Desktop shows a centered phone frame.
+3. Senior accessibility is mandatory: 14px minimum text, 48px tap targets, WCAG AA contrast.
+4. No backend. All data from `src/data/`. No fetch, no localStorage for critical state.
+5. Warm, not clinical. Companion app, not medical device UI.
+
+## Execution
+- Challenge bad ideas before implementing.
+- Reuse before creating. Check existing components first.
+- Components under 200 lines. One component per file.
+- Functional components only, TypeScript strict, no `any`.
+- Use `cn()` for conditional classnames.
+
+## Never
+- Inter, Roboto, Arial fonts
+- Purple gradients or neon colors
+- Hamburger menus, swipe-only navigation
+- Spinners (use pulse animations)
+- Bounce, shake, spin animations (vertigo risk)
+- Placeholder Lorem Ipsum

@@ -1,0 +1,36 @@
+---
+description: Tech stack and conventions
+alwaysApply: true
+---
+
+# Tech Stack — SteadyStep
+
+## Stack
+- Vite + React 18 + TypeScript (strict)
+- Tailwind CSS v3 (NOT v4)
+- react-router-dom v6 (HashRouter)
+- Recharts, lucide-react
+- clsx + tailwind-merge as `cn()` in `src/lib/utils.ts`
+- State: useState + useContext only
+- Fonts: Source Serif 4 (serif), DM Sans (sans) via Google Fonts
+- Deploy: Vercel static with vercel.json SPA rewrite
+
+## Folder structure
+src/
+components/
+ui/           # Button, Card, Input, Badge
+layout/       # AppShell, TabBar, ScreenHeader
+exercise/     # ExerciseCard, CircularTimer, RepCounter
+chat/         # ChatBubble, QuickReplies
+progress/    # BalanceScoreCard, WeeklyActivityChart, StreakBar, MilestoneList
+screens/       # Onboarding, Home, Exercises, ExerciseSession, Chat, Progress, BalanceCheck, Profile
+data/          # exercises, sessions, progress, messages, milestones (.ts)
+context/       # UserContext.tsx
+hooks/         # useTimer.ts
+lib/           # utils.ts
+
+
+## Conventions
+- Absolute imports via `@/` alias
+- Named default exports
+- Pin Tailwind to ^3. If v4 syntax issues appear, downgrade.

@@ -1,0 +1,45 @@
+---
+description: Design tokens for SteadyStep
+globs: src/**/*.{ts,tsx,css}
+alwaysApply: false
+---
+
+# Design Tokens
+
+## Colors (Tailwind)
+```js
+colors: {
+  teal: { DEFAULT: '#1A8A7D', dark: '#14706A', light: '#E6F5F3' },
+  text: { primary: '#1E293B', secondary: '#64748B', muted: '#94A3B8' },
+  surface: { DEFAULT: '#FAFAF8', card: '#FFFFFF', border: '#E8E5E0', divider: '#F1EDE8' },
+  accent: { orange: '#E8913A', red: '#DC4F4F', green: '#3BA676' },
+  ai: { bubble: '#F5F0EB' },
+}
+```
+
+## Typography
+- Headings: `font-serif` (Source Serif 4)
+- Body: `font-sans` (DM Sans)
+- Page title: 28px serif 600
+- Section: 22px serif 600
+- Card title: 18px sans 600
+- Body: 16px sans 400
+- Caption: 14px sans 400
+- Hero number: 48px serif 700
+- **Minimum: 14px anywhere**
+
+## Spacing
+- Screen padding: px-5 (20px)
+- Card padding: p-5 (20px)
+- Tab bar: 72px tall (not default 56px)
+
+## Components
+- Primary button: h-14 (56px), rounded-btn (12px)
+- Tap targets: min h-12 w-12, 8px between
+- Cards: rounded-card (16px), shadow-card, border
+
+## Motion
+- 250ms ease-out
+- Card entrance: fade + translateY(8px), stagger 50ms
+- Respect prefers-reduced-motion
+- Never: bounce, shake, spin
