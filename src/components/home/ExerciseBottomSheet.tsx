@@ -64,7 +64,6 @@ export function ExerciseBottomSheet({ exercise, onClose, onComplete }: ExerciseB
     isDragging.current = false
     const delta = clientY - dragStartY.current
     const sheetH = sheetRef.current?.offsetHeight ?? 400
-    // Dismiss if dragged more than 30% of sheet height
     if (delta > sheetH * 0.3) {
       onClose()
     } else {
@@ -73,12 +72,9 @@ export function ExerciseBottomSheet({ exercise, onClose, onComplete }: ExerciseB
     dragStartY.current = null
   }
 
-  // Touch
   const onTouchStart = (e: React.TouchEvent) => onDragStart(e.touches[0].clientY)
   const onTouchMove = (e: React.TouchEvent) => onDragMove(e.touches[0].clientY)
   const onTouchEnd = (e: React.TouchEvent) => onDragEnd(e.changedTouches[0].clientY)
-
-  // Mouse (desktop testing)
   const onMouseDown = (e: React.MouseEvent) => onDragStart(e.clientY)
   const onMouseMove = (e: React.MouseEvent) => onDragMove(e.clientY)
   const onMouseUp = (e: React.MouseEvent) => onDragEnd(e.clientY)
@@ -86,11 +82,15 @@ export function ExerciseBottomSheet({ exercise, onClose, onComplete }: ExerciseB
   const opacity = Math.max(0, 1 - dragOffset / 300)
   const transition = isDragging.current ? 'none' : 'transform 0.25s cubic-bezier(0.32,0.72,0,1)'
 
+  // Portal into #overlay-root so the sheet stays inside the phone frame bounds.
+  // Uses absolute (not fixed) so the frame's overflow:hidden clips it correctly.
+  const portalTarget = document.getElementById('overlay-root') ?? document.body
+
   return createPortal(
-    <div className="fixed inset-0 z-50 flex items-end justify-center">
+    <div className="absolute inset-0 flex items-end pointer-events-auto">
       {/* Backdrop */}
       <div
-        className="absolute inset-0 bg-warm-dark/60 transition-opacity duration-250"
+        className="absolute inset-0 bg-warm-dark/60"
         style={{ opacity }}
         onClick={onClose}
       />
@@ -98,17 +98,14 @@ export function ExerciseBottomSheet({ exercise, onClose, onComplete }: ExerciseB
       {/* Sheet */}
       <div
         ref={sheetRef}
-        className="relative w-full max-w-[430px] bg-warm-bg rounded-t-sheet pb-10 max-h-[88vh] flex flex-col animate-slide-up"
-        style={{
-          transform: `translateY(${dragOffset}px)`,
-          transition,
-        }}
+        className="relative w-full bg-warm-bg rounded-t-sheet pb-10 max-h-[88%] flex flex-col animate-slide-up"
+        style={{ transform: `translateY(${dragOffset}px)`, transition }}
         onClick={e => e.stopPropagation()}
         onMouseLeave={e => { if (isDragging.current) onDragEnd(e.clientY) }}
         onMouseUp={onMouseUp}
         onMouseMove={onMouseMove}
       >
-        {/* Drag handle — interaction target */}
+        {/* Drag handle */}
         <div
           className="flex justify-center pt-3 pb-2 flex-shrink-0 cursor-grab active:cursor-grabbing select-none"
           onTouchStart={onTouchStart}
@@ -125,14 +122,12 @@ export function ExerciseBottomSheet({ exercise, onClose, onComplete }: ExerciseB
           <h2 className="font-display text-3xl text-warm-text leading-tight mb-1">{name}</h2>
           <p className="text-sm text-warm-muted mb-5">{subtitle}</p>
 
-          {/* Illustration */}
           <ExerciseIllustration
             exerciseId={exercise.illustrationId}
             warm
             className="mb-5"
           />
 
-          {/* 3 instruction pills */}
           <div className="flex gap-3 mb-5">
             {instructions.map((step, i) => (
               <div key={i} className="flex-1 rounded-[12px] bg-warm-accent-light px-3 py-3 text-center">
@@ -142,18 +137,17 @@ export function ExerciseBottomSheet({ exercise, onClose, onComplete }: ExerciseB
             ))}
           </div>
 
-          {/* Description */}
           <p className="text-base text-warm-muted leading-relaxed">{description}</p>
         </div>
 
-        {/* CTA */}
+        {/* Mark done — no "View exercise" label, just completes it */}
         <div className="px-6 pt-4 flex-shrink-0">
           <Button variant="primary" fullWidth onClick={handleCTA}>
-            {t.sheet.cta}
+            {t.sheet.done}
           </Button>
         </div>
       </div>
     </div>,
-    document.body,
+    portalTarget,
   )
 }

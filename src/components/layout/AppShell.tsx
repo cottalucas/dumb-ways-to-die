@@ -39,6 +39,9 @@ export function AppShell({ children, showTabBar }: AppShellProps) {
             <TabBar />
           </div>
         )}
+        {/* Portal anchor for overlays (sheets, modals). Sits above content but inside
+            the phone frame so overflow:hidden keeps them frame-constrained. */}
+        <div id="overlay-root" className="absolute inset-0 pointer-events-none z-50" />
       </div>
     </div>
   )
