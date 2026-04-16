@@ -53,6 +53,7 @@ export const translations = {
       cta: 'Übung anzeigen',
       animationPlaceholder: 'Animation folgt',
       done: 'Als erledigt markieren',
+      undone: 'Rückgängig machen',
     },
     profile: {
       title: 'Mein Profil',
@@ -150,6 +151,7 @@ export const translations = {
       cta: 'View exercise',
       animationPlaceholder: 'Animation coming soon',
       done: 'Mark as done',
+      undone: 'Undo',
     },
     profile: {
       title: 'My Profile',

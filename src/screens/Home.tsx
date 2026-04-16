@@ -133,6 +133,14 @@ export function Home() {
     setDoneIds(prev => new Set([...prev, id]))
   }
 
+  const handleUncomplete = (id: string) => {
+    setDoneIds(prev => {
+      const next = new Set(prev)
+      next.delete(id)
+      return next
+    })
+  }
+
   return (
     <>
       <div className="px-5 pt-8 pb-4 bg-warm-bg">
@@ -174,8 +182,10 @@ export function Home() {
 
       <ExerciseBottomSheet
         exercise={selectedExercise}
+        done={selectedExercise ? doneIds.has(selectedExercise.id) : false}
         onClose={() => setSelectedExercise(null)}
         onComplete={handleComplete}
+        onUncomplete={handleUncomplete}
       />
     </>
   )

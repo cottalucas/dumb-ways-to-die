@@ -7,11 +7,13 @@ import { OtagoExercise } from '../../data/otago'
 
 interface ExerciseBottomSheetProps {
   exercise: OtagoExercise | null
+  done: boolean
   onClose: () => void
   onComplete: (exerciseId: string) => void
+  onUncomplete: (exerciseId: string) => void
 }
 
-export function ExerciseBottomSheet({ exercise, onClose, onComplete }: ExerciseBottomSheetProps) {
+export function ExerciseBottomSheet({ exercise, done, onClose, onComplete, onUncomplete }: ExerciseBottomSheetProps) {
   const { t, lang } = useLang()
   const visible = exercise !== null
 
@@ -43,7 +45,11 @@ export function ExerciseBottomSheet({ exercise, onClose, onComplete }: ExerciseB
   }`
 
   const handleCTA = () => {
-    onComplete(exercise.id)
+    if (done) {
+      onUncomplete(exercise.id)
+    } else {
+      onComplete(exercise.id)
+    }
     onClose()
   }
 
@@ -140,10 +146,9 @@ export function ExerciseBottomSheet({ exercise, onClose, onComplete }: ExerciseB
           <p className="text-base text-warm-muted leading-relaxed">{description}</p>
         </div>
 
-        {/* Mark done — no "View exercise" label, just completes it */}
         <div className="px-6 pt-4 flex-shrink-0">
-          <Button variant="primary" fullWidth onClick={handleCTA}>
-            {t.sheet.done}
+          <Button variant={done ? 'secondary' : 'primary'} fullWidth onClick={handleCTA}>
+            {done ? t.sheet.undone : t.sheet.done}
           </Button>
         </div>
       </div>
