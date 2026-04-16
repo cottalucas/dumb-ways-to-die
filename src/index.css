@@ -140,6 +140,15 @@
   animation: slideDown 0.2s ease-out both;
 }
 
+@keyframes slideUp {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+
+.animate-slide-up {
+  animation: slideUp 0.28s cubic-bezier(0.32, 0.72, 0, 1) both;
+}
+
 .check-path {
   stroke-dasharray: 100;
   stroke-dashoffset: 100;

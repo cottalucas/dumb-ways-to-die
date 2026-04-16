@@ -9,9 +9,23 @@ import { Chat } from './screens/Chat'
 import { Progress } from './screens/Progress'
 import { BalanceCheck } from './screens/BalanceCheck'
 import { Profile } from './screens/Profile'
+import { Footprints } from 'lucide-react'
+
+function LoadingScreen() {
+  return (
+    <div className="h-screen flex flex-col items-center justify-center gap-4 bg-surface">
+      <div className="flex items-center gap-2">
+        <Footprints size={24} className="text-teal animate-pulse" />
+        <span className="font-serif text-2xl font-semibold text-text-primary">SteadyStep</span>
+      </div>
+    </div>
+  )
+}
 
 function AppRoutes() {
-  const { name } = useUser()
+  const { name, loading } = useUser()
+
+  if (loading) return <LoadingScreen />
 
   return (
     <Routes>

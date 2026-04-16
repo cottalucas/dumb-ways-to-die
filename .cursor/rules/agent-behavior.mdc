@@ -1,6 +1,17 @@
 ---
 description: Core agent behavior for SteadyStep
 alwaysApply: true
+
+Before writing any code, read these files in order:
+1. docs/current-state.md — what's built and what's broken right now
+2. AGENTS.md — hard constraints and build rules
+3. docs/prototype-spec.md — screen-by-screen interaction spec
+4. docs/design-system.md — all colors, spacing, typography tokens
+5. docs/data-mocks.md — data shapes (relevant when touching src/data/)
+
+Do not skip this. The current-state.md is the handoff between sessions.
+After completing any task, update docs/current-state.md before closing out.
+
 ---
 
 # Agent Behavior — SteadyStep

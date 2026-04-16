@@ -1,12 +1,22 @@
 import { Card } from '../ui/Card'
 import { LineChart, Line, ResponsiveContainer, Tooltip } from 'recharts'
-import { weeklyProgress } from '../../data/progress'
 
-export function BalanceScoreCard() {
-  const sparkData = weeklyProgress.map(w => ({ score: w.balanceScore, week: w.label }))
-  const current = weeklyProgress[weeklyProgress.length - 1].balanceScore
-  const prev = weeklyProgress[0].balanceScore
-  const pct = Math.round(((current - prev) / prev) * 100)
+interface WeekScore {
+  label: string
+  balanceScore: number
+}
+
+interface BalanceScoreCardProps {
+  weeklyData: WeekScore[]
+}
+
+export function BalanceScoreCard({ weeklyData }: BalanceScoreCardProps) {
+  if (weeklyData.length === 0) return null
+
+  const sparkData = weeklyData.map(w => ({ score: w.balanceScore, week: w.label }))
+  const current = weeklyData[weeklyData.length - 1].balanceScore
+  const prev = weeklyData[0].balanceScore
+  const pct = prev > 0 ? Math.round(((current - prev) / prev) * 100) : 0
 
   return (
     <Card variant="elevated" className="overflow-hidden">
@@ -15,9 +25,11 @@ export function BalanceScoreCard() {
         <span className="font-serif text-2xl text-text-muted mb-3">/ 100</span>
       </div>
       <p className="text-sm text-text-secondary mb-3">Your balance confidence score</p>
-      <span className="inline-flex items-center gap-1 bg-green-50 text-accent-green text-xs font-semibold px-3 py-1 rounded-full mb-4">
-        ↑ {pct}% from 4 weeks ago
-      </span>
+      {pct !== 0 && (
+        <span className="inline-flex items-center gap-1 bg-green-50 text-accent-green text-xs font-semibold px-3 py-1 rounded-full mb-4">
+          ↑ {pct}% from 4 weeks ago
+        </span>
+      )}
       <div className="h-16">
         <ResponsiveContainer width="100%" height="100%">
           <LineChart data={sparkData}>
