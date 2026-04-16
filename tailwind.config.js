@@ -5,7 +5,7 @@ export default {
     extend: {
       colors: {
         teal: { DEFAULT: '#1A8A7D', dark: '#14706A', light: '#E6F5F3' },
-        text: { primary: '#1E293B', secondary: '#64748B', muted: '#94A3B8' },
+        text: { primary: '#1E293B', secondary: '#475569', muted: '#64748B' },
         surface: { DEFAULT: '#FAFAF8', card: '#FFFFFF', border: '#E8E5E0', divider: '#F1EDE8' },
         accent: { orange: '#E8913A', red: '#DC4F4F', green: '#3BA676' },
         ai: { bubble: '#F5F0EB' },

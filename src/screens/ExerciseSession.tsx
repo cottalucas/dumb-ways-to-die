@@ -10,6 +10,7 @@ import { useUser } from '../context/UserContext'
 import { getSessionById } from '../data/sessions'
 import { getExerciseById, Exercise } from '../data/exercises'
 import { exerciseEncouragement } from '../data/messages'
+import { logSession } from '../services/sessionService'
 
 type Phase = 'overview' | 'transition' | 'active' | 'complete'
 
@@ -27,7 +28,7 @@ function ProgressBar({ current, total }: { current: number; total: number }) {
 export function ExerciseSession() {
   const { sessionId } = useParams<{ sessionId: string }>()
   const navigate = useNavigate()
-  const { name, setCompletedSessions, completedSessions } = useUser()
+  const { userId, name, setCompletedSessions, completedSessions } = useUser()
 
   const session = sessionId ? getSessionById(sessionId) : null
   const exerciseList: Exercise[] = (session?.exerciseIds ?? [])
@@ -63,8 +64,18 @@ export function ExerciseSession() {
     } else {
       setCompletedSessions(completedSessions + 1)
       setPhase('complete')
+      // Log to Firestore — fire and forget
+      if (session) {
+        logSession(userId, {
+          sessionTemplateId: session.id,
+          sessionName: session.name,
+          durationMinutes: session.durationMinutes,
+          exercisesCompleted: exerciseList.length,
+          totalExercises: exerciseList.length,
+        }).catch(err => console.error('logSession failed:', err))
+      }
     }
-  }, [exerciseIndex, exerciseList.length, completedSessions])
+  }, [exerciseIndex, exerciseList.length, completedSessions, userId, session])
 
   const handleExerciseComplete = useCallback(() => {
     handleNextExercise()
@@ -80,7 +91,7 @@ export function ExerciseSession() {
 
   if (!session || exerciseList.length === 0) {
     return (
-      <div className="min-h-screen flex items-center justify-center p-6">
+      <div className="flex-1 flex items-center justify-center p-6">
         <p className="text-text-secondary">Session not found.</p>
       </div>
     )
@@ -89,7 +100,7 @@ export function ExerciseSession() {
   // PHASE: Overview
   if (phase === 'overview') {
     return (
-      <div className="min-h-screen flex flex-col">
+      <div className="flex-1 flex flex-col">
         <div className="flex items-center h-14 px-4 gap-3">
           <button onClick={handleExit} className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-divider">
             <X size={20} />
@@ -142,7 +153,7 @@ export function ExerciseSession() {
   if (phase === 'transition') {
     return (
       <div
-        className="min-h-screen flex flex-col items-center justify-center px-6 bg-white animate-fade-slide-in"
+        className="flex-1 flex flex-col items-center justify-center px-6 bg-white animate-fade-slide-in"
         onClick={() => { setPhase('active'); setTimerKey(k => k + 1) }}
       >
         <p className="text-sm text-text-muted uppercase tracking-widest mb-3">Up next</p>
@@ -159,7 +170,7 @@ export function ExerciseSession() {
   // PHASE: Active exercise
   if (phase === 'active') {
     return (
-      <div className="min-h-screen flex flex-col">
+      <div className="flex-1 flex flex-col">
         {/* Top bar */}
         <div className="flex items-center h-14 px-4 gap-2">
           <span className="text-sm font-semibold text-text-secondary flex-1">
@@ -283,7 +294,7 @@ export function ExerciseSession() {
 
   // PHASE: Complete
   return (
-    <div className="min-h-screen flex flex-col px-5 pb-8 pt-6 items-center">
+    <div className="flex-1 flex flex-col px-5 pb-8 pt-6 items-center">
       <div className="flex-1 flex flex-col items-center justify-center text-center">
         {/* Checkmark animation */}
         <div className="w-20 h-20 rounded-full bg-teal-light flex items-center justify-center mb-6 animate-scale-in">

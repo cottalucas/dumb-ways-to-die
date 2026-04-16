@@ -12,7 +12,7 @@ export function Card({ variant = 'default', padding = 'default', className, chil
       className={cn(
         'bg-surface-card rounded-card border border-surface-border',
         variant === 'default' ? 'shadow-card' : 'shadow-elevated',
-        padding === 'default' && 'p-5',
+        padding === 'default' && 'p-6',
         className,
       )}
       {...props}

@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { MessageCircle, Clock, Dumbbell, Smartphone, Play, ChevronRight } from 'lucide-react'
 import { Card } from '../components/ui/Card'
@@ -5,8 +6,9 @@ import { Button } from '../components/ui/Button'
 import { StreakBar } from '../components/progress/StreakBar'
 import { useUser } from '../context/UserContext'
 import { todaySession } from '../data/sessions'
-import { weeklyProgress } from '../data/progress'
+import { weeklyProgress as mockWeekly } from '../data/progress'
 import { greetings } from '../data/messages'
+import { getWeeklyProgress, WeeklyProgressRecord } from '../services/progressService'
 
 function DifficultyDots({ level }: { level: 1 | 2 | 3 }) {
   return (
@@ -23,15 +25,35 @@ function DifficultyDots({ level }: { level: 1 | 2 | 3 }) {
 
 export function Home() {
   const navigate = useNavigate()
-  const { name, currentStreak } = useUser()
+  const { userId, name, currentStreak } = useUser()
   const today = new Date()
   const dateStr = today.toLocaleDateString('en-CH', { weekday: 'long', month: 'long', day: 'numeric' })
-  const currentWeek = weeklyProgress[weeklyProgress.length - 1]
-  const aiMessage = greetings.streak(name, currentStreak)
   const todayIndex = today.getDay() === 0 ? 6 : today.getDay() - 1
+  const aiMessage = greetings.streak(name, currentStreak)
+
+  const [currentWeek, setCurrentWeek] = useState<WeeklyProgressRecord | null>(null)
+  const [error, setError] = useState('')
+
+  useEffect(() => {
+    getWeeklyProgress(userId)
+      .then(weeks => {
+        if (weeks.length > 0) {
+          setCurrentWeek(weeks[weeks.length - 1])
+        } else {
+          // Fallback to mock for demo if Firestore is empty
+          const mock = mockWeekly[mockWeekly.length - 1]
+          setCurrentWeek({ ...mock, weekId: 'mock' })
+        }
+      })
+      .catch(() => setError("Could not load this week's data."))
+  }, [userId])
+
+  const weekData = currentWeek ?? { ...mockWeekly[mockWeekly.length - 1], weekId: 'fallback' }
 
   return (
     <div className="px-5 pt-6 pb-6">
+      {error && <p className="text-sm text-accent-red mb-3">{error}</p>}
+
       {/* Greeting */}
       <div className="mb-5 stagger-children">
         <h1 className="font-serif text-2xl font-semibold text-text-primary animate-fade-slide-in">
@@ -52,9 +74,10 @@ export function Home() {
         </div>
         <button
           onClick={() => navigate('/chat')}
-          className="mt-3 text-sm font-semibold text-teal hover:underline"
+          className="mt-4 w-full flex items-center justify-between py-3 px-4 rounded-btn bg-teal-light text-teal font-semibold text-base hover:bg-teal hover:text-white transition-colors"
         >
-          Chat with me →
+          <span>Chat with me</span>
+          <ChevronRight size={18} />
         </button>
       </Card>
 
@@ -86,9 +109,9 @@ export function Home() {
       {/* Weekly streak */}
       <Card className="mb-4 animate-fade-slide-in" style={{ animationDelay: '150ms' }}>
         <h3 className="text-lg font-semibold text-text-primary mb-4">This week</h3>
-        <StreakBar dailyActivity={currentWeek.dailyActivity} todayIndex={todayIndex} />
+        <StreakBar dailyActivity={weekData.dailyActivity} todayIndex={todayIndex} />
         <p className="text-sm text-text-secondary mt-4">
-          {currentWeek.sessions} of 5 days completed this week
+          {weekData.sessions} of 5 days completed this week
         </p>
       </Card>
 

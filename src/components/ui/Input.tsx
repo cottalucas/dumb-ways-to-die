@@ -18,10 +18,10 @@ export function Input({ label, error, className, id, ...props }: InputProps) {
       <input
         id={inputId}
         className={cn(
-          'h-14 px-4 text-lg rounded-btn border border-surface-border bg-white',
-          'focus:outline-none focus:ring-2 focus:ring-teal focus:border-teal',
+          'h-16 px-4 text-xl rounded-btn border-2 border-surface-border bg-white',
+          'focus:outline-none focus:border-teal',
           'placeholder:text-text-muted',
-          error && 'border-accent-red focus:ring-accent-red',
+          error && 'border-accent-red focus:border-accent-red',
           className,
         )}
         {...props}

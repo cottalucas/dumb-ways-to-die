@@ -15,7 +15,7 @@ const CONFIDENCE_OPTIONS = [
 
 export function Onboarding() {
   const navigate = useNavigate()
-  const { setName, setBalanceConfidence, setHasFallenLastYear } = useUser()
+  const { completeOnboarding } = useUser()
   const [step, setStep] = useState<'welcome' | 'setup'>('welcome')
   const [nameInput, setNameInput] = useState('')
   const [confidence, setConfidence] = useState<number | null>(null)
@@ -23,57 +23,56 @@ export function Onboarding() {
 
   const canSubmit = nameInput.trim().length > 0 && confidence !== null && fallen !== null
 
-  const handleStart = () => {
-    setName(nameInput.trim())
-    setBalanceConfidence(confidence!)
-    setHasFallenLastYear(fallen!)
+  const handleStart = async () => {
+    await completeOnboarding(nameInput.trim(), confidence!, fallen!)
     navigate('/home')
   }
 
   if (step === 'welcome') {
     return (
-      <div className="min-h-screen flex flex-col px-6 pt-safe">
-        {/* Wordmark */}
-        <div className="flex items-center gap-2 pt-12 mb-auto">
-          <Footprints size={24} className="text-teal" />
-          <span className="font-serif text-3xl font-semibold text-text-primary tracking-tight">SteadyStep</span>
-        </div>
-
-        {/* Hero content */}
-        <div className="flex-1 flex flex-col items-center justify-center text-center py-12">
-          {/* Decorative SVG */}
-          <div className="mb-8">
-            <svg width="120" height="80" viewBox="0 0 120 80" fill="none">
-              <path d="M10 70 Q30 20 60 40 Q90 60 110 10" stroke="#1A8A7D" strokeWidth="3" strokeLinecap="round" fill="none" opacity="0.6" />
-              <path d="M10 55 Q35 30 60 48 Q85 65 110 25" stroke="#1A8A7D" strokeWidth="2" strokeLinecap="round" fill="none" opacity="0.35" />
-              <circle cx="60" cy="42" r="6" fill="#1A8A7D" opacity="0.5" />
-              <circle cx="20" cy="65" r="4" fill="#1A8A7D" opacity="0.3" />
-              <circle cx="100" cy="18" r="4" fill="#1A8A7D" opacity="0.3" />
-            </svg>
+      <div className="flex-1 flex flex-col px-6">
+          {/* Wordmark */}
+          <div className="flex items-center gap-2 pt-12 flex-shrink-0">
+            <Footprints size={24} className="text-teal" />
+            <span className="font-serif text-3xl font-semibold text-text-primary tracking-tight">SteadyStep</span>
           </div>
 
-          <h1 className="font-serif text-[28px] font-semibold text-text-primary leading-tight mb-4">
-            Your daily balance companion
-          </h1>
-          <p className="text-base text-text-secondary leading-relaxed max-w-xs">
-            Ten minutes a day to build strength, improve balance, and stay independent.
-          </p>
-        </div>
+          {/* Hero content */}
+          <div className="flex-1 flex flex-col items-center justify-center text-center">
+            {/* Decorative SVG */}
+            <div className="mb-8">
+              <svg width="120" height="80" viewBox="0 0 120 80" fill="none">
+                <path d="M10 70 Q30 20 60 40 Q90 60 110 10" stroke="#1A8A7D" strokeWidth="3" strokeLinecap="round" fill="none" opacity="0.6" />
+                <path d="M10 55 Q35 30 60 48 Q85 65 110 25" stroke="#1A8A7D" strokeWidth="2" strokeLinecap="round" fill="none" opacity="0.35" />
+                <circle cx="60" cy="42" r="6" fill="#1A8A7D" opacity="0.5" />
+                <circle cx="20" cy="65" r="4" fill="#1A8A7D" opacity="0.3" />
+                <circle cx="100" cy="18" r="4" fill="#1A8A7D" opacity="0.3" />
+              </svg>
+            </div>
 
-        {/* CTA */}
-        <div className="pb-10 flex flex-col gap-3">
+            <h1 className="font-serif text-[28px] font-semibold text-text-primary leading-tight mb-4">
+              Your daily balance companion
+            </h1>
+            <p className="text-base text-text-secondary leading-relaxed max-w-xs">
+              Ten minutes a day to build strength, improve balance, and stay independent.
+            </p>
+          </div>
+
+        {/* Pinned CTA — never scrolls */}
+        <div className="px-0 pb-8 pt-3 bg-surface flex-shrink-0">
           <Button variant="primary" fullWidth onClick={() => setStep('setup')}>
             Get Started
           </Button>
-          <p className="text-center text-sm text-text-muted">No account needed for this demo.</p>
+          <p className="text-center text-sm text-text-muted mt-3">No account needed for this demo.</p>
         </div>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen flex flex-col px-6">
-      <div className="pt-12 pb-4 flex items-center gap-2">
+    <div className="flex-1 flex flex-col px-6">
+      {/* Back arrow */}
+      <div className="pt-12 pb-4 flex items-center gap-2 flex-shrink-0">
         <button
           onClick={() => setStep('welcome')}
           className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-divider"
@@ -82,12 +81,13 @@ export function Onboarding() {
         </button>
       </div>
 
+      {/* Scrollable content */}
       <div className="flex-1 overflow-y-auto">
         <h1 className="font-serif text-2xl font-semibold text-text-primary mb-8">
           Let's get to know you
         </h1>
 
-        <div className="flex flex-col gap-8">
+        <div className="flex flex-col gap-8 pb-4">
           {/* Name */}
           <Input
             label="What should we call you?"
@@ -131,7 +131,7 @@ export function Onboarding() {
                 <button
                   key={option}
                   onClick={() => setFallen(option === 'Yes')}
-                  className={`flex-1 h-14 rounded-btn border-2 font-semibold text-base transition-all ${
+                  className={`flex-1 h-16 rounded-btn border-2 font-semibold text-lg transition-all ${
                     fallen === (option === 'Yes')
                       ? 'border-teal bg-teal-light text-teal'
                       : 'border-surface-border bg-white text-text-secondary'
@@ -145,7 +145,8 @@ export function Onboarding() {
         </div>
       </div>
 
-      <div className="pb-10 pt-6">
+      {/* Pinned CTA — never scrolls */}
+      <div className="pb-8 pt-3 bg-surface flex-shrink-0">
         <Button variant="primary" fullWidth onClick={handleStart} disabled={!canSubmit}>
           Start My Program
         </Button>

@@ -36,8 +36,8 @@ export function Button({
   }
 
   const sizes: Record<Size, string> = {
-    default: 'h-14 px-6 text-base',
-    sm: 'h-11 px-4 text-sm',
+    default: 'h-16 px-6 text-lg',   // 64px — clear tap target for elderly
+    sm: 'h-14 px-5 text-base',      // 56px — still well above 44px minimum
   }
 
   return (
@@ -47,7 +47,7 @@ export function Button({
       {...props}
     >
       {loading ? (
-        <span className="h-4 w-4 rounded-full border-2 border-current border-t-transparent animate-spin" />
+        <span className="h-5 w-5 rounded-full border-2 border-current border-t-transparent animate-spin" />
       ) : leftIcon}
       {children}
       {!loading && rightIcon}

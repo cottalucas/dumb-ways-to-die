@@ -18,11 +18,22 @@ export function AppShell({ children, showTabBar }: AppShellProps) {
         )}
         style={{ maxHeight: '100dvh' }}
       >
-        <div className={cn('flex-1 overflow-y-auto overflow-x-hidden', showTabBar && 'pb-[72px]')}>
-          <div className="animate-fade-slide-in">
-            {children}
+        {showTabBar ? (
+          // Scrollable layout: padding lives on the inner div (not the scroll container)
+          // so browsers honour it correctly as part of the scrollable content.
+          <div className="flex-1 overflow-y-auto overflow-x-hidden">
+            <div className="animate-fade-slide-in pb-[84px]">
+              {children}
+            </div>
           </div>
-        </div>
+        ) : (
+          // Full-height layout: flex column so screens can use flex-1 to fill the frame.
+          <div className="flex-1 flex flex-col overflow-hidden">
+            <div className="animate-fade-slide-in flex-1 flex flex-col">
+              {children}
+            </div>
+          </div>
+        )}
         {showTabBar && (
           <div className="absolute bottom-0 left-0 right-0">
             <TabBar />
