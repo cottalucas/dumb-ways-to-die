@@ -3,6 +3,8 @@ import { cn } from '../../lib/utils'
 interface ExerciseIllustrationProps {
   exerciseId: string
   className?: string
+  /** Use warm palette bg instead of teal */
+  warm?: boolean
 }
 
 // Simple CSS-animated SVG illustrations for each exercise
@@ -138,13 +140,14 @@ const defaultIllustration = () => (
   </svg>
 )
 
-export function ExerciseIllustration({ exerciseId, className }: ExerciseIllustrationProps) {
+export function ExerciseIllustration({ exerciseId, className, warm }: ExerciseIllustrationProps) {
   const IllustrationComponent = illustrations[exerciseId] || defaultIllustration
 
   return (
     <div
       className={cn(
-        'w-full aspect-video bg-teal-light rounded-card flex items-center justify-center overflow-hidden',
+        'w-full h-44 rounded-card flex items-center justify-center overflow-hidden',
+        warm ? 'bg-warm-accent-light' : 'bg-teal-light',
         className,
       )}
     >

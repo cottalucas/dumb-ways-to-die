@@ -48,7 +48,7 @@ export function ExerciseBottomSheet({ exercise, onClose, onComplete }: ExerciseB
 
       {/* Sheet — max-width mirrors phone frame */}
       <div
-        className="relative w-full max-w-[430px] bg-white rounded-t-sheet pb-10 animate-slide-up max-h-[90vh] flex flex-col"
+        className="relative w-full max-w-[430px] bg-warm-bg rounded-t-sheet pb-10 animate-slide-up max-h-[85vh] flex flex-col"
         onClick={e => e.stopPropagation()}
       >
         {/* Drag handle */}
@@ -65,7 +65,8 @@ export function ExerciseBottomSheet({ exercise, onClose, onComplete }: ExerciseB
           {/* Illustration */}
           <ExerciseIllustration
             exerciseId={exercise.illustrationId}
-            className="mb-5 rounded-card overflow-hidden"
+            warm
+            className="mb-5"
           />
 
           {/* 3 instruction pills — 2-line format */}
