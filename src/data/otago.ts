@@ -207,5 +207,5 @@ export const todaySession = {
   title: { de: 'Balance & Kraft — Tag 4', en: 'Balance & Strength — Day 4' },
   durationMin: 12,
   difficulty: { de: 'Mittel', en: 'Medium' },
-  exercises: otagoExercises.slice(0, 6).map((ex, i) => ({ ...ex, done: i === 0 })),
+  exercises: otagoExercises.slice(0, 6).map(ex => ({ ...ex, done: false })),
 }
