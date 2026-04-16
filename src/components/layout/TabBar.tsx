@@ -1,16 +1,18 @@
 import { useLocation, useNavigate } from 'react-router-dom'
 import { Home, BarChart2, User } from 'lucide-react'
 import { cn } from '../../lib/utils'
-
-const tabs = [
-  { label: 'Home', icon: Home, path: '/home' },
-  { label: 'Fortschritt', icon: BarChart2, path: '/progress' },
-  { label: 'Profil', icon: User, path: '/profile' },
-]
+import { useLang } from '../../context/LanguageContext'
 
 export function TabBar() {
   const location = useLocation()
   const navigate = useNavigate()
+  const { t } = useLang()
+
+  const tabs = [
+    { label: t.nav.home, icon: Home, path: '/home' },
+    { label: t.nav.progress, icon: BarChart2, path: '/progress' },
+    { label: t.nav.profile, icon: User, path: '/profile' },
+  ]
 
   return (
     <div className="h-[84px] bg-white border-t border-warm-border flex safe-bottom">
@@ -26,11 +28,7 @@ export function TabBar() {
             )}
             aria-label={label}
           >
-            <Icon
-              size={28}
-              strokeWidth={active ? 2.5 : 1.8}
-              className={active ? 'text-warm-text' : 'text-warm-muted'}
-            />
+            <Icon size={28} strokeWidth={active ? 2.5 : 1.8} />
             <span className={cn('text-[13px] font-semibold', active ? 'text-warm-text' : 'text-warm-muted')}>
               {label}
             </span>

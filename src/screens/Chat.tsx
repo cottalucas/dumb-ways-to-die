@@ -4,12 +4,14 @@ import { ArrowLeft, MessageCircle, Send } from 'lucide-react'
 import { ChatBubble, TypingIndicator } from '../components/chat/ChatBubble'
 import { QuickReplies } from '../components/chat/QuickReplies'
 import { useUser } from '../context/UserContext'
+import { useLang } from '../context/LanguageContext'
 import { chatResponses, quickReplies as defaultReplies } from '../data/messages'
 import { subscribeToMessages, addMessage, ChatMessage } from '../services/chatService'
 
 export function Chat() {
   const navigate = useNavigate()
   const { userId, name } = useUser()
+  const { t } = useLang()
   const [messages, setMessages] = useState<ChatMessage[]>([])
   const [typing, setTyping] = useState(false)
   const [chips, setChips] = useState(defaultReplies)
@@ -64,11 +66,15 @@ export function Chat() {
   return (
     <div className="flex-1 flex flex-col bg-surface">
       {/* Header */}
-      <div className="flex items-center h-14 px-4 border-b border-surface-border bg-white gap-3 flex-shrink-0">
-        <button onClick={() => navigate(-1)} className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-divider">
-          <ArrowLeft size={20} />
+      <div className="flex items-center h-16 px-4 border-b border-warm-border bg-white gap-3 flex-shrink-0">
+        <button
+          onClick={() => navigate('/home')}
+          className="w-12 h-12 flex items-center justify-center rounded-full hover:bg-warm-bg"
+          aria-label="Back"
+        >
+          <ArrowLeft size={22} />
         </button>
-        <h1 className="flex-1 text-base font-semibold text-text-primary">Your Companion</h1>
+        <h1 className="flex-1 text-base font-semibold text-warm-text">{t.chat.title}</h1>
         <div className="w-9 h-9 rounded-full bg-teal flex items-center justify-center">
           <MessageCircle size={16} className="text-white" />
         </div>

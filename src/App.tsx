@@ -1,10 +1,12 @@
 import { HashRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { AppShell } from './components/layout/AppShell'
 import { UserProvider, useUser } from './context/UserContext'
+import { LanguageProvider } from './context/LanguageContext'
 import { Onboarding } from './screens/Onboarding'
 import { Home } from './screens/Home'
 import { Exercises } from './screens/Exercises'
 import { ExerciseSession } from './screens/ExerciseSession'
+import { SessionFlow } from './screens/SessionFlow'
 import { Chat } from './screens/Chat'
 import { Progress } from './screens/Progress'
 import { BalanceCheck } from './screens/BalanceCheck'
@@ -55,6 +57,16 @@ function AppRoutes() {
           !name ? <Navigate to="/" replace /> : (
             <AppShell showTabBar>
               <Exercises />
+            </AppShell>
+          )
+        }
+      />
+      <Route
+        path="/session/today"
+        element={
+          !name ? <Navigate to="/" replace /> : (
+            <AppShell showTabBar={false}>
+              <SessionFlow />
             </AppShell>
           )
         }
@@ -117,9 +129,11 @@ function AppRoutes() {
 export function App() {
   return (
     <HashRouter>
-      <UserProvider>
-        <AppRoutes />
-      </UserProvider>
+      <LanguageProvider>
+        <UserProvider>
+          <AppRoutes />
+        </UserProvider>
+      </LanguageProvider>
     </HashRouter>
   )
 }
