@@ -52,7 +52,7 @@ export const translations = {
     sheet: {
       cta: 'Übung anzeigen',
       animationPlaceholder: 'Animation folgt',
-      done: 'Erledigt',
+      done: 'Als erledigt markieren',
     },
     profile: {
       title: 'Mein Profil',
@@ -149,7 +149,7 @@ export const translations = {
     sheet: {
       cta: 'View exercise',
       animationPlaceholder: 'Animation coming soon',
-      done: 'Done',
+      done: 'Mark as done',
     },
     profile: {
       title: 'My Profile',
